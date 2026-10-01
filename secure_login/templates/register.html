@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "_forms.html" import csrf, field %}
+{% block title %}Create an account{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Create an account</h1>
+  <form method="post" novalidate>
+    {{ csrf() }}
+    {{ field("username", "Username", value=form.username, error=errors.username, autocomplete="username", autofocus=True, maxlength=32,
+             hint="3 to 32 letters, digits, dots, hyphens or underscores.") }}
+    {{ field("email", "Email address", type="email", value=form.email, error=errors.email, autocomplete="email", maxlength=254) }}
+    {{ field("password", "Password", type="password", error=errors.password, autocomplete="new-password",
+             hint="At least 12 characters. A few unrelated words work well.") }}
+    {{ field("confirm", "Password again", type="password", error=errors.confirm, autocomplete="new-password") }}
+    <button type="submit">Create account</button>
+  </form>
+  <p class="aside">Already registered? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+</section>
+{% endblock %}

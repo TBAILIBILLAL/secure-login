@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.venv/
+
+# the database and the cookie-signing key never belong in a repository
+instance/
+*.db
+*.db-wal
+*.db-shm
+
+.idea/
+.vscode/
+Thumbs.db
+.DS_Store

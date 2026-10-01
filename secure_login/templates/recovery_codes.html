@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Recovery codes{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Save your recovery codes</h1>
+  {% if just_enabled %}
+  <p class="notice success" role="status">Two-factor authentication is on.</p>
+  {% else %}
+  <p class="notice info" role="status">Your earlier recovery codes no longer work.</p>
+  {% endif %}
+  <p>If you lose your phone, each of these codes lets you log in once. Keep them
+     somewhere safe, such as a password manager.
+     <strong>They are shown only this one time.</strong></p>
+  <ul class="codes">
+    {% for code in codes %}
+    <li>{{ code }}</li>
+    {% endfor %}
+  </ul>
+  <p><a class="button" href="{{ url_for('auth.account') }}">I have saved them</a></p>
+</section>
+{% endblock %}

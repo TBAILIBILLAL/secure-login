@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "_forms.html" import csrf, field %}
+{% block title %}Enter your code{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Enter your code</h1>
+  <p>Your password was correct. Now enter the 6-digit code from your authenticator app.</p>
+  {% if error %}
+  <p class="notice error" role="alert">{{ error }}</p>
+  {% endif %}
+  <form method="post" novalidate>
+    {{ csrf() }}
+    {{ field("code", "Code", autocomplete="one-time-code", inputmode="numeric", autofocus=True, maxlength=32,
+             hint="Lost your phone? Enter one of your recovery codes instead.") }}
+    <button type="submit">Continue</button>
+  </form>
+  <p class="aside"><a href="{{ url_for('auth.login') }}">Start again</a></p>
+</section>
+{% endblock %}

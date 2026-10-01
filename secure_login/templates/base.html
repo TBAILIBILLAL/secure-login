@@ -1,0 +1,32 @@
+{% from "_forms.html" import csrf %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% endblock %} · Secure Login</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="{{ url_for('auth.index') }}">
+      <img src="{{ url_for('static', filename='favicon.svg') }}" alt="" width="22" height="22">
+      Secure Login
+    </a>
+    {% if g.user %}
+    <form method="post" action="{{ url_for('auth.logout') }}">
+      {{ csrf() }}
+      <span class="who">{{ g.user["username"] }}</span>
+      <button class="quiet" type="submit">Log out</button>
+    </form>
+    {% endif %}
+  </header>
+  <main class="{% block width %}narrow{% endblock %}">
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+    <p class="notice {{ category }}" role="status">{{ message }}</p>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

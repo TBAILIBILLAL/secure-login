@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% from "_forms.html" import csrf, field %}
+{% block title %}Your account{% endblock %}
+{% block width %}wide{% endblock %}
+{% block content %}
+<h1>Your account</h1>
+
+<section class="card">
+  <h2>Details</h2>
+  <dl>
+    <dt>Username</dt><dd>{{ g.user["username"] }}</dd>
+    <dt>Email address</dt><dd>{{ g.user["email"] }}</dd>
+    <dt>Member since</dt><dd>{{ g.user["created_at"] | datetime }}</dd>
+  </dl>
+</section>
+
+<section class="card">
+  <h2>Two-factor authentication
+    {% if g.user["totp_enabled"] %}<span class="badge on">On</span>{% else %}<span class="badge off">Off</span>{% endif %}
+  </h2>
+  {% if g.user["totp_enabled"] %}
+  <p>Logging in needs your password and a code from your authenticator app.
+     You have {{ recovery_codes_left }} unused recovery {{ "code" if recovery_codes_left == 1 else "codes" }}.</p>
+  <form method="post" novalidate>
+    {{ csrf() }}
+    {{ field("password", "Confirm your password to change these settings", type="password", autocomplete="current-password") }}
+    <div class="actions">
+      <button class="secondary" type="submit" formaction="{{ url_for('auth.new_recovery_codes') }}">New recovery codes</button>
+      <button class="danger" type="submit" formaction="{{ url_for('auth.disable_2fa') }}">Turn off</button>
+    </div>
+  </form>
+  {% else %}
+  <p>Add a second step to logging in: a code from an authenticator app on your phone.
+     Your password alone will then not be enough to get into your account.</p>
+  <p><a class="button" href="{{ url_for('auth.setup_2fa') }}">Set up two-factor authentication</a></p>
+  {% endif %}
+</section>
+
+<section class="card">
+  <h2>Sessions</h2>
+  <p>Places where you are logged in. A session ends after 30 minutes without use.</p>
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th scope="col">Browser</th><th scope="col">Address</th><th scope="col">Logged in</th><th scope="col">Last active</th></tr>
+      </thead>
+      <tbody>
+        {% for s in sessions %}
+        <tr>
+          <td>{{ s.user_agent or "Unknown" }}{% if s.current %} <span class="badge on">This one</span>{% endif %}</td>
+          <td>{{ s.ip }}</td>
+          <td>{{ s.created_at | datetime }}</td>
+          <td>{{ s.last_seen | datetime }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <form method="post" action="{{ url_for('auth.end_other_sessions') }}">
+    {{ csrf() }}
+    <button class="secondary" type="submit">Log out everywhere else</button>
+  </form>
+</section>
+{% endblock %}

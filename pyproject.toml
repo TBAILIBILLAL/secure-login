@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "secure-login"
+version = "1.0.0"
+description = "A login web app with Argon2id password hashing, server-side sessions and two-factor authentication"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "Flask>=3.0",
+    "argon2-cffi>=23.1",
+    "pyotp>=2.9",
+    "segno>=1.6",
+]
+
+[tool.setuptools]
+packages = ["secure_login"]
+
+[tool.setuptools.package-data]
+secure_login = ["schema.sql", "templates/*.html", "static/*"]

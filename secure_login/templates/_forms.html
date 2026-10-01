@@ -1,0 +1,20 @@
+{% macro csrf() -%}
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+{%- endmacro %}
+
+{% macro field(name, label, type="text", value="", error=None, hint=None, autocomplete="off", inputmode=None, autofocus=False, maxlength=None) %}
+<div class="field">
+  <label for="{{ name }}">{{ label }}</label>
+  <input id="{{ name }}" name="{{ name }}" type="{{ type }}" value="{{ value }}" required
+         autocomplete="{{ autocomplete }}" autocapitalize="none" spellcheck="false"
+         {%- if inputmode %} inputmode="{{ inputmode }}"{% endif %}
+         {%- if maxlength %} maxlength="{{ maxlength }}"{% endif %}
+         {%- if autofocus %} autofocus{% endif %}
+         {%- if error %} aria-invalid="true" aria-describedby="{{ name }}-error"{% elif hint %} aria-describedby="{{ name }}-hint"{% endif %}>
+  {% if error %}
+  <p class="error" id="{{ name }}-error">{{ error }}</p>
+  {% elif hint %}
+  <p class="hint" id="{{ name }}-hint">{{ hint }}</p>
+  {% endif %}
+</div>
+{% endmacro %}
